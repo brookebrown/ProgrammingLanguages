@@ -1,0 +1,90 @@
+Script started on 2017-10-23 11:52:53-0400
+]0;brownb8@elvix2:~/languagesHW[brownb8@elvix2 ~/languagesHW]$ ./getPatResults[33Ggnatmake getPatResults.adb
+gnatmake: "getPatResults" up to date.
+]0;brownb8@elvix2:~/languagesHW[brownb8@elvix2 ~/languagesHW]$ gnatmake getPatResults.adb[33G./getPatResults[K
+Enter number of patients.
+10
+Enter patients data.
+1 1 1 0
+2 1 1 1
+3 0 0 0
+4 0 0 0
+5 1 1 0
+6 0 0 0
+7 0 0 0
+8 1 0 1
+9 0 1 0
+10 0 0 0
+P(D | Pos1) =  0.75
+P(D | Pos2) =  1.00
+P(H | Neg1) =  0.83
+P(H | Neg2) =  0.75
+Neither test is better
+]0;brownb8@elvix2:~/languagesHW[brownb8@elvix2 ~/languagesHW]$ ./getPatResults
+Enter number of patients.
+8
+Enter patients data.
+1 1 0 1
+2 1 1 0
+3 0 0 0
+4 0 0 1
+5 0 0 1
+6 0 0 0
+7 0 0 1 
+8 0 1 1
+P(D | Pos1) =  0.50
+P(D | Pos2) =  0.20
+P(H | Neg1) =  0.83
+P(H | Neg2) =  0.67
+Test 1 is better
+]0;brownb8@elvix2:~/languagesHW[brownb8@elvix2 ~/languagesHW]$ ./getPatResults
+Enter number of patients.
+2
+Enter patients data.
+1 0 0 0
+2 1 0 1
+P(D | Pos1) = NaN**
+P(D | Pos2) =  1.00
+P(H | Neg1) =  0.50
+P(H | Neg2) =  1.00
+Neither test is better
+]0;brownb8@elvix2:~/languagesHW[brownb8@elvix2 ~/languagesHW]$ ./getPatResults
+Enter number of patients.
+15
+Enter patients data.
+1 0 0 0
+2 0 1 0 
+3 0 0 0
+4 1 1 1
+5 0 1 1
+6 1 1 1
+7 1 0 1
+8 1 1 0
+9 1 0 1
+10 1 1 1
+11 1 0 1
+12 1 1 0
+ 0  13 0 1 1
+14 0 0 0
+15 1 0 0
+P(D | Pos1) =  0.63
+P(D | Pos2) =  0.75
+P(H | Neg1) =  0.43
+P(H | Neg2) =  0.57
+Test 2 is better
+]0;brownb8@elvix2:~/languagesHW[brownb8@elvix2 ~/languagesHW]$ ./getPatResults
+Enter number of patients.
+3 4
+Enter patients data.
+1 0 0 0
+2 1 1 1
+3 0 1 1
+4 0 0 0
+P(D | Pos1) =  0.50
+P(D | Pos2) =  0.50
+P(H | Neg1) =  1.00
+P(H | Neg2) =  1.00
+Neither test is better
+]0;brownb8@elvix2:~/languagesHW[brownb8@elvix2 ~/languagesHW]$ ^Dexit
+
+Script done on 2017-10-23 11:57:15-0400

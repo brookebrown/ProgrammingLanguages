@@ -1,0 +1,147 @@
+;HW Tinkham 2017 - Programming Languages
+;Brooke Brown
+
+;Takes list of patient data and returns list containing:
+;P(D | Pos1): The probability that the patient has the disease, given that the result of test 1 was positive
+;P(D | Pos2): The probability that the patient has the disease, given that the result of test 2 was positive
+;P(H | Neg1): The probability that the patient does not have the disease, given that the result of test 1 was negative
+;P(H | Neg2): The probability that the patient does not have the disease, given that the result of test 2 was negative
+;Which test is better.
+;Input list contains: (Patient number, has disease, test1 positive, test2 positive)
+;Input list contains: (Patient number, has disease, test1 positive, test2 positive)
+(define (medical_test Patient_Data) (list (pDgivenPos1 Patient_Data) (pDgivenPos2 Patient_Data) (pHgivenNeg1 Patient_Data) (pHgivenNeg2 Patient_Data) (bestTest? Patient_Data)))
+
+;(define (ex) (list (eval '(pDgivenPos1 test)) (eval '(pDgivenPos2 test))))
+
+;Returns the probability that the patient has the disease, given that the result of test 1 is positive.
+;Input is a list of a single patients data.
+;data does not have to be in paranthesis for input
+(define (pDgivenPos1 Patient_Data) (/ (occurs 1 (grabNumList (Patient_Data) 1)) (occurs 1 (grabT1 (Patient_Data)))))
+
+;Returns the probability that the patient has the disease, given that the result of test 2 is positive.
+;Input is a list of a single patients data.
+;data does not have to be in paranthesis for input
+(define (pDgivenPos2 Patient_Data) (/ (occurs 1 (grabNumList (Patient_Data) 2)) (occurs 1 (grabT2 (Patient_Data)))))
+
+;Returns the probability that the patient doesn't have the disease, given that the result of test 1 is negative.
+;Input is a list of a single patients data.
+(define (pHgivenNeg1 Patient_Data) (/ (occurs 0 (grabNumList (Patient_Data) 3)) (occurs 0 (grabT1 (Patient_Data)))))
+
+;Returns the probability that the patient doesn't have the disease, given that the result of test 2 is negative.
+;Input is a list of a single patients data.
+(define (pHgivenNeg2 Patient_Data) (/ (occurs 0 (grabNumList (Patient_Data) 4)) (occurs 0 (grabT2 (Patient_Data)))))
+
+;Returns a list of ALL of the second items in each list.
+;Input: whole data of patients
+;To test, dataAll must be in paranthesis
+(define (grabD Patient_Data)
+        (cond   ((null? Patient_Data) '())
+                (else (cons (hasD (car Patient_Data)) (grabD (cdr Patient_Data))))))
+
+;Returns a list of ALL of the third items in each list.
+;Input: whole data of patients
+;To test, dataAll must be in paranthesis
+(define (grabT1 Patient_Data)
+        (cond   ((null? Patient_Data) '())
+                (else (cons (t1 (car Patient_Data)) (grabT1 (cdr Patient_Data))))))
+
+;Returns a list of ALL of the fourth items in each list.
+;Input: whole data of patients
+;To test, dataAll must be in paranthesis
+(define (grabT2 Patient_Data)
+        (cond   ((null? Patient_Data) '())
+                (else (cons (t2 (car Patient_Data)) (grabT2 (cdr Patient_Data))))))
+
+;Return a list of patients with both the disease and which tests to compare.
+;1 = has disease and tested positive on test 1
+;2 = has disease and tested positive on test 2
+;3 = no disease and tested negative on test 1
+;4 = no disease and tested negative on test 2
+;Input: whole data of patients and which test to do.
+;To test Patient_data must be in paranthesis
+(define (grabNumList Patient_Data type)
+        (cond   ((null? Patient_Data) '())
+                ((equal? type 1) 
+                         (cond ((and (= 1 (car (grabD Patient_Data))) (= 1 (car (grabT1 Patient_Data))))   (cons 1 (grabNumList (cdr Patient_Data) 1)))
+                               (else (cons 0 (grabNumList (cdr Patient_Data) 1)))
+                               )
+                         )
+                ((equal? type 2) 
+                          (cond ((and (= 1 (car (grabD Patient_Data))) (= 1 (car (grabT2 Patient_Data))))   (cons 1 (grabNumList (cdr Patient_Data) 2)))
+                               (else (cons 0 (grabNumList (cdr Patient_Data) 2)))
+                               )
+                         )
+                ((equal? type 3) 
+                          (cond ((and (= 0 (car (grabD Patient_Data))) (= 0 (car (grabT1 Patient_Data))))   (cons 0 (grabNumList (cdr Patient_Data) 3)))
+                               (else (cons 1 (grabNumList (cdr Patient_Data) 3)))
+                               )
+                         )
+                ((equal? type 4) 
+                          (cond ((and (= 0 (car (grabD Patient_Data))) (= 0 (car (grabT2 Patient_Data))))   (cons 0 (grabNumList (cdr Patient_Data) 4)))
+                               (else (cons 1 (grabNumList (cdr Patient_Data) 4)))
+                               )
+                         )
+                (else "wrong input in method")))
+
+;Returns number of item occurences in list L.
+(define (occurs item L)
+        (cond   ((null? L) 0)
+                ((equal? item (car L)) (+ 1 (occurs item (cdr L))))
+                (else (occurs item (cdr L)))))
+
+;Returns which test is the best, or if neither are better.
+;Input: the whole list of lists of patient data
+(define (bestTest? data)
+        (cond   ((and (> (pDgivenPos1 data) (pDgivenPos2 data)) (> (pHgivenNeg1 data) 0)) "test1")
+                ((and (< (pDgivenPos1 data) (pDgivenPos2 data)) (< (pHgivenNeg1 data) 0)) "test2")
+                (else "neither")))
+
+;Returns patient number
+(define patNum car)
+
+;Returns if patient has disease
+(define hasD cadr)
+
+;Returns test 1 result
+(define t1 caddr)
+
+;Returns test 2 result
+(define t2 cadddr)
+
+;test input
+(define (test) '(
+     (1   1   1   0)
+     (2   1   1   1)
+     (3   0   0   0)
+     (4   0   0   0)
+     (5   1   1   0)
+     (6   0   0   0)
+     (7   0   0   0)
+     (8   1   0   1)
+     (9   0   1   0)
+     (10  0   0   0)
+))
+
+;test input
+(define (test1) '(
+     (1   1   0   1)
+     (2   1   1   0)
+     (3   0   0   0)
+     (4   0   0   1)
+     (5   0   0   1)
+     (6   0   0   0)
+     (7   0   0   1)
+     (8   0   1   1)
+))
+
+;test input
+(define (test3) '(
+     (1   1   1   0)
+     (2   1   1   1)
+))
+
+;test input
+(define (test4) '(
+     (1   1   1   0)
+))
+

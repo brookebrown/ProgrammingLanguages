@@ -1,0 +1,16 @@
+Script started on 2017-10-02 09:15:30-0400
+]0;brownb8@elvix2:~/SchemeHW[brownb8@elvix2 ~/SchemeHW]$ scheme48
+Welcome to Scheme 48 1.9.2 (made by root on 2016-08-30)
+See http://s48.org/ for more information.
+Please report bugs to scheme-48-bugs@s48.org.
+Get more information at http://www.s48.org/.
+Type ,? (comma question-mark) for help.
+> load hw       ,load hw
+> (medical_test test)
+(3/4 1 5/6 3/4 "neither")
+> (medical_test test1)
+(1/2 1/5 5/6 2/3 "test1")
+> ,exit
+]0;brownb8@elvix2:~/SchemeHW[brownb8@elvix2 ~/SchemeHW]$ ^Dexit
+
+Script done on 2017-10-02 09:15:55-0400

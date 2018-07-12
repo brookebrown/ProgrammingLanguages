@@ -1,0 +1,113 @@
+%medical_test(+PatientData, -ProbDPos1, -ProbDPos2, -ProbHNeg1, -ProbHNeg2, -Best)
+%PatientData is a nonempty list of 4-element lists [PatientNum, HasDisease, PosOnTest1, PosOnTest2], where 
+%          HasDisease is 1 if the patient has the disease, else 0 
+%          PosOnTest1 is 1 if the patient patient tested positive on test 1, else 0 
+%          PosOnTest2 is 1 if the patient patient tested positive on test 2, else 0
+%The predicate should always succeed. When it succeeds, 
+%        ProbDPos1 is P(D | Pos1) 
+%        ProbDPos2 is P(D | Pos2) 
+%        ProbHNeg1 is P(H | Neg1) 
+%        ProbHNeg2 is P(H | Neg2) 
+%        Best is one of {test1, test2, neither}, indicating which test is better. 
+
+medical_test(PatientData, P1, P2, P3, P4, Best) :-
+    occursTest1Disease(PatientData, C1, 1, 1),
+    occursTest1(PatientData, C2, 1),
+    occursTest2Disease(PatientData, C3, 1, 1),
+    occursTest2(PatientData, C4, 1),
+    occursTest1Disease(PatientData, C5, 0, 0),
+    occursTest1(PatientData, C6, 0),
+    occursTest2Disease(PatientData, C7, 0, 0),
+    occursTest2(PatientData, C8, 0),
+    P1 is C1/C2,
+    P2 is C3/C4,
+    P3 is C5/C6,
+    P4 is C7/C8,
+    checkBest(P1, P2, P3, P4, Best).
+
+%checkBest(-P1, -P2, -P3, -P4, -Best)
+%checkBest mathematically compared the probabilities (P1..P4) 
+%and determines which test is better 
+checkBest(P1, P2, P3, P4, 'test1') :-
+    P1 > P2,
+    P3 > P4.
+
+checkBest(P1, P2, P3, P4, 'test2') :-
+    P1 < P2,
+    P3 < P4.
+
+checkBest(P1, P2, P3, P4, 'neither') :-
+    P1 >= P2,
+    P3 =< P4.
+
+checkBest(P1, P2, P3, P4, 'neither') :-
+    P1 =< P2,
+    P3 >= P4.
+
+%occursTest1(+L, -Count, +Test1)
+%counts number of occurences of when Test1 is positive or negative 
+%base case (list is empty so nothing to count): 
+occursTest1([], 0, _).
+%case: it's in the head
+occursTest1([[_, _, Test1, _] | T], Count, Test1) :-
+    occursTest1(T, TCount, Test1),
+    Count is 1 + TCount.
+%case: it's NOT in the head
+occursTest1([[_, _, H, _] | T], Count, Test1) :-
+    Test1 \== H,
+    occursTest1(T, Count, Test1).
+
+%occursTest2(+L, -Count, +Test2)
+%counts number of occurences of when Test2 is positive or negative
+%base case (list is empty so nothing to count):
+occursTest2([], 0, _).
+%case: it's in the head
+occursTest2([[_, _, _, Test2] | T], Count, Test2) :-
+    occursTest2(T, TCount, Test2),
+    Count is 1 + TCount.
+%case: it's NOT in the head
+occursTest2([[_, _, _, H] | T], Count, Test2) :-
+    Test2 \== H,
+    occursTest2(T, Count, Test2).
+
+%occursTest1Disease(+L, -Count, +Test1, +Disease)
+%counts number of occurences of when Test1 AND Disease is positive or negative 
+%base case (list is empty so nothing to count):
+occursTest1Disease([], 0, _, _).
+%case: it's in the head
+occursTest1Disease([[_, Disease, Test1, _] | T], Count, Test1, Disease) :-
+    occursTest1Disease(T, TCount, Test1, Disease),
+    Count is 1 + TCount.
+%case: it's NOT in the head
+occursTest1Disease([[_, H, G, _] | T], Count, Test1, Disease) :-
+    Test1 \== G,
+    Disease \== H,
+    occursTest1Disease(T, Count, Test1, Disease).
+occursTest1Disease([[_, _, G, _] | T], Count, Test1, Disease) :-
+    Test1 \== G,
+    occursTest1Disease(T, Count, Test1, Disease).
+occursTest1Disease([[_, H, _, _] | T], Count, Test1, Disease) :-
+    Disease \== H,
+    occursTest1Disease(T, Count, Test1, Disease).
+
+%occursTest2Disease(+L, -Count, +Test2, +Disease)
+%counts number of occurences of when Test2 AND Disease is positive or negative
+%base case (list is empty so nothing to count):
+occursTest2Disease([], 0, _, _).
+%case: it's in the head
+occursTest2Disease([[_, Disease, _, Test2] | T], Count, Test2, Disease) :-
+    occursTest2Disease(T, TCount, Test2, Disease),
+    Count is 1 + TCount.
+%case: it's NOT in the head
+occursTest2Disease([[_, H, _, G] | T], Count, Test2, Disease) :-
+    Test2 \== G,
+    Disease \== H,
+    occursTest2Disease(T, Count, Test2, Disease).
+occursTest2Disease([[_, _, _, G] | T], Count, Test2, Disease) :-
+    Test2 \== G,
+    occursTest2Disease(T, Count, Test2, Disease).
+occursTest2Disease([[_, H, _, _] | T], Count, Test2, Disease) :-
+    Disease \== H,
+    occursTest2Disease(T, Count, Test2, Disease).
+
+
